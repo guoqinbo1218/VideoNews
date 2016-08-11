@@ -9,11 +9,11 @@ import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feicuiedu.videoplayer.R;
@@ -29,8 +29,7 @@ import io.vov.vitamio.Vitamio;
  * <p>
  * MediaPlayer来做视频播放的控制，SurfaceView来显示视频
  * <p>
- * 视图方面(initView方法中进行初始化)将简单实现:
- * 放一个播放/暂停按钮，一个进度条,一个全屏按钮,和一个SurfaceView
+ * 视图方面(initView方法中进行初始化)将简单实现:放一个播放/暂停按钮，一个进度条,一个全屏按钮,和一个SurfaceView
  * <p>
  * 本API实现结构：
  * <ul>
@@ -61,7 +60,6 @@ public class SimpleVideoView extends FrameLayout {
     private ImageView ivPreview;
     private ImageButton btnToggle;
     private ProgressBar progressBar;
-    private TextView tvLoading;
 
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
@@ -97,6 +95,11 @@ public class SimpleVideoView extends FrameLayout {
             }
         }
     };
+
+    public ImageView getIvPreview() {
+        return ivPreview;
+    }
+
     /**
      * 设置播放谁(一定要在onResume方法调用前来调用):
      */
@@ -132,7 +135,6 @@ public class SimpleVideoView extends FrameLayout {
 
     // 初始化自定义的简单的视频播放控制视图
     private void initControllerViews() {
-        tvLoading = (TextView) findViewById(R.id.tvLoading);
         // 预览图片
         ivPreview = (ImageView) findViewById(R.id.ivPreview);
         // 播放/暂停 按钮
@@ -169,6 +171,18 @@ public class SimpleVideoView extends FrameLayout {
                 isPrepared = true;
                 // 准备好后，自动开始播放
                 startMediaPlayer();
+            }
+        });
+        mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+            @Override public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                // 根据宽的数据,去适配高的数据
+                int videoWidth = surfaceView.getWidth();
+                int videoHeight = videoWidth * height/width;
+                // 重置surfaceview宽高
+                ViewGroup.LayoutParams layoutParams = surfaceView.getLayoutParams();
+                layoutParams.width = videoWidth;
+                layoutParams.height = videoHeight;
+                surfaceView.setLayoutParams(layoutParams);
             }
         });
         mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
