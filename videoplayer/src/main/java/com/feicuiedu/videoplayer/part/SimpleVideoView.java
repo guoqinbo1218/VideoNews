@@ -2,6 +2,8 @@ package com.feicuiedu.videoplayer.part;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
@@ -11,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feicuiedu.videoplayer.R;
@@ -26,11 +29,12 @@ import io.vov.vitamio.Vitamio;
  * <p>
  * MediaPlayer来做视频播放的控制，SurfaceView来显示视频
  * <p>
- * 视图方面将简单实现:放一个播放/暂停按钮，一个进度条,一个全屏按钮,和一个SurfaceView
+ * 视图方面(initView方法中进行初始化)将简单实现:
+ * 放一个播放/暂停按钮，一个进度条,一个全屏按钮,和一个SurfaceView
  * <p>
  * 本API实现结构：
  * <ul>
- * <li/>提供setVideoPath方法(一定要在onResume方法调用前来调用): 设置播放谁
+ * <li/>提供setVideoPath方法(要在onResume方法调用前来调用): 设置播放谁
  * <li/>提供onResume方法(在activity的onResume来调用): 初始化MediaPlayer,准备MediaPlayer
  * <li/>提供onPause方法 (在activity的onPause来调用): 释放MediaPlayer,暂停mediaPlayer
  * </ul>
@@ -49,7 +53,7 @@ public class SimpleVideoView extends FrameLayout {
 
     public SimpleVideoView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        initView();
     }
 
     private String videoPath;
@@ -57,16 +61,19 @@ public class SimpleVideoView extends FrameLayout {
     private ImageView ivPreview;
     private ImageButton btnToggle;
     private ProgressBar progressBar;
+    private TextView tvLoading;
 
     private SurfaceView surfaceView;
     private SurfaceHolder surfaceHolder;
 
     private MediaPlayer mediaPlayer;
 
-    private boolean isPrepared; // 当前视频是否已准备好
-    private boolean isPlaying; // 当前视频是否正在播放
+    private boolean isPrepared; // 当前视频是否已准备好(防止在还未prepared就进行play)
+    private boolean isPlaying; // 当前视频是否正在播放(主要将在更新播放进度时用到)
 
-    private void init() {
+    private static final int PROGRESS_MAX = 1000;
+
+    private void initView() {
         Vitamio.isInitialized(getContext());
         LayoutInflater.from(getContext()).inflate(R.layout.view_simple_video_player, this, true);
         // surfaceview的初始化
@@ -75,6 +82,21 @@ public class SimpleVideoView extends FrameLayout {
         initControllerViews();
     }
 
+    // 用来更新播放进度的handler
+    private final Handler handler = new Handler(){
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(isPlaying){
+                long current = mediaPlayer.getCurrentPosition();
+                long duration = mediaPlayer.getDuration();
+                int progress = (int) (current * PROGRESS_MAX / duration);
+                // 更新当前播放进度的进度条
+                progressBar.setProgress(progress);
+                // 每200毫秒，再更新一次
+                handler.sendEmptyMessageDelayed(0, 200);
+            }
+        }
+    };
     /**
      * 设置播放谁(一定要在onResume方法调用前来调用):
      */
@@ -110,6 +132,7 @@ public class SimpleVideoView extends FrameLayout {
 
     // 初始化自定义的简单的视频播放控制视图
     private void initControllerViews() {
+        tvLoading = (TextView) findViewById(R.id.tvLoading);
         // 预览图片
         ivPreview = (ImageView) findViewById(R.id.ivPreview);
         // 播放/暂停 按钮
@@ -127,6 +150,7 @@ public class SimpleVideoView extends FrameLayout {
         });
         // 进度条
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar.setMax(PROGRESS_MAX);
         // 全屏按钮
         ImageButton btnFullScreen = (ImageButton) findViewById(R.id.btnFullScreen);
         btnFullScreen.setOnClickListener(new OnClickListener() {
@@ -149,6 +173,12 @@ public class SimpleVideoView extends FrameLayout {
         });
         mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
             @Override public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_START){
+                    return true;
+                }
+                if (what == MediaPlayer.MEDIA_INFO_BUFFERING_END){
+                    return true;
+                }
                 if (what == MediaPlayer.MEDIA_INFO_FILE_OPEN_OK) {
                     // 注意：Vitamio5.0 要对音频进行设置才能播放
                     // 否则，不能播放在线视频
@@ -177,10 +207,13 @@ public class SimpleVideoView extends FrameLayout {
 
     // 开始MediaPlayer, 同时更新UI状态
     private void startMediaPlayer() {
+        // 是否已准备好，防止在还未prepared,用户就按下play进行播放
         if (isPrepared) {
             mediaPlayer.start();
         }
         isPlaying = true;
+        // 更新UI（进度条）
+        handler.sendEmptyMessage(0);
         // 播放和暂停按钮图像的更新
         btnToggle.setImageResource(R.drawable.ic_pause);
     }
@@ -191,6 +224,7 @@ public class SimpleVideoView extends FrameLayout {
             mediaPlayer.pause();
         }
         isPlaying = false;
+        handler.removeMessages(0);
         // 播放和暂停按钮图像的更新
         btnToggle.setImageResource(R.drawable.ic_play_arrow);
     }
