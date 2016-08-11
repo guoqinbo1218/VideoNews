@@ -1,7 +1,8 @@
 package com.feicuiedu.videonews;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.feicuiedu.videoplayer.full.VideoViewActivity;
 
@@ -24,10 +25,17 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
+    @OnClick(R.id.btnLikes)
+    public void demoLikes(){
+        // 进入部分播放Activity
+        Intent intent = new Intent(this, PartPlayActivity.class);
+        startActivity(intent);
+    }
+
     @OnClick(R.id.btnLocal)
-    public void demoPlay(){
+    public void demoLocal() {
         // 开启VideoViewActivity进行视频播放
-        VideoViewActivity.open(this, getTestVideo1());
+         VideoViewActivity.open(this, getTestVideo1());
     }
 
     private String getTestVideo1(){
