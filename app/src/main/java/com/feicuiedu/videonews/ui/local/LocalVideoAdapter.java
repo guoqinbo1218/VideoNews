@@ -14,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * 本地视频列表的适配器
  * 作者：yuanchao on 2016/8/12 0012 14:33
  * 邮箱：yuanchao@feicuiedu.com
  */
