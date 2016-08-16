@@ -22,19 +22,14 @@ import butterknife.Unbinder;
 /**
  * 本地视频页面
  * <P/>
- * 视图上主要有一个GridView来展示所有视图
- * <P/>
- * 业务上将使用Loader进行数据加载
- * 1. LoaderManager - initLoader
- * 2. Callback
- * 3. CallBack - onCreateLoader (用来创建出Loader - 一般就可直接使用CurseLoader)
- * 4. CallBack - onLoadFinished (完成后来调用)
- * 5. CallBack - onLoaderReset
+ * 主要有一个GridView来展示所有视图,使用Loader进行数据加载,CursorAdapter进行数据适配
  * <P/>
  * 作者：yuanchao on 2016/8/12 0012 14:18
  * 邮箱：yuanchao@feicuiedu.com
  */
 public class LocalVideoFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>{
+
+    //
 
     private Unbinder unbinder;
 

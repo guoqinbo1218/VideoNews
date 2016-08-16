@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
+ * 本地视频的单项视图，用于{@link LocalVideoAdapter}中。
  * 作者：yuanchao on 2016/8/12 0012 14:34
  * 邮箱：yuanchao@feicuiedu.com
  */

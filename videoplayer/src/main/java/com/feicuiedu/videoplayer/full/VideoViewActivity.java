@@ -18,9 +18,9 @@ import io.vov.vitamio.Vitamio;
 import io.vov.vitamio.widget.VideoView;
 
 /**
- * 使用VideoView进行视频播放的Activity,其中MediaController是自定义的
+ * 使用VideoView进行视频播放的Activity,自定义了缓冲时的视图, MediaController是自定义的
  * <p>
- * 请使用open方法,传入视频path,启动些Activity
+ * 使用open方法,传入视频path,启动此Activity
  * <p>
  * 作者：yuanchao on 2016/8/9 0009 15:47
  * 邮箱：yuanchao@feicuiedu.com

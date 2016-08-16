@@ -8,11 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.feicuiedu.videonews.bombapi.BombClient;
+import com.feicuiedu.videonews.bombapi.VideoApi;
+import com.feicuiedu.videonews.bombapi.result.VideoResult;
 import com.feicuiedu.videonews.ui.local.LocalVideoFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 // app
 // videoplayer 视频播放
@@ -43,7 +49,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        VideoApi videoApi = BombClient.getsInstance().getVideoApi();
+        Call<VideoResult> call = videoApi.getVideoNewsList(5, 0);
+        call.enqueue(callback);
     }
+
+    private Callback<VideoResult> callback = new Callback<VideoResult>() {
+        @Override public void onResponse(Call<VideoResult> call, Response<VideoResult> response) {
+
+        }
+
+        @Override public void onFailure(Call<VideoResult> call, Throwable t) {
+
+        }
+    };
 
     @Override public void onContentChanged() {
         super.onContentChanged();
