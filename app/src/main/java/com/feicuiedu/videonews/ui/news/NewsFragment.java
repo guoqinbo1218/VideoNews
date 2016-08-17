@@ -13,6 +13,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
+ * 视频新闻列表页面
+ *
  * 作者：yuanchao on 2016/8/16 0016 16:46
  * 邮箱：yuanchao@feicuiedu.com
  */
@@ -32,6 +34,12 @@ public class NewsFragment extends Fragment {
     @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        // 首次进入，自动刷新
+        newsListView.post(new Runnable() {
+            @Override public void run() {
+                newsListView.autoRefresh();
+            }
+        });
     }
 
     @Override public void onDestroyView() {

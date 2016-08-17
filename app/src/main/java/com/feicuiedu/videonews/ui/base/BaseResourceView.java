@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 
 import com.feicuiedu.videonews.R;
 import com.feicuiedu.videonews.bombapi.BombClient;
-import com.feicuiedu.videonews.bombapi.VideoApi;
+import com.feicuiedu.videonews.bombapi.NewsApi;
 import com.feicuiedu.videonews.bombapi.result.QueryResult;
 import com.feicuiedu.videonews.commons.ToastUtils;
 import com.mugen.Mugen;
@@ -32,18 +32,22 @@ import retrofit2.Response;
 /**
  * 带下拉刷新及分页加载功能的自定义视图
  * <p/>
- * 列表视图使用 {@link android.support.v7.widget.RecyclerView}实现
+ * 本API已完成列表视图上下拉获取数据 及 使用适配器适配显示数据的核心业务流程
  * <p/>
- * 下拉刷新使用 {@link android.support.v4.widget.SwipeRefreshLayout}实现
+ * 子类只需重写 queryData(),getLimit()和createItemView(),分别去获取不同数据及创建不同列表项视图即可
  * <p/>
- * 分页加载使用 {@link com.mugen.Mugen} + ProgressBar实现
+ * 列表视图使用 {@link RecyclerView}实现
  * <p/>
- * 本API将包括列表视图（带上下拉）,的核心业务流程(获取数据,显示数据-到RecyclerView上)
+ * 下拉刷新使用 {@link SwipeRefreshLayout}实现
+ * <p/>
+ * 分页加载使用 {@link Mugen} + {@link ProgressBar} 实现
+ * <p/>
+ * 数据获取使用 {@link NewsApi}实现
  * <p/>
  * 作者：yuanchao on 2016/8/17 0017 10:12
  * 邮箱：yuanchao@feicuiedu.com
  */
-public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model>> extends FrameLayout implements
+public abstract class BaseResourceView<Model, ItemView extends BaseItemView<Model>> extends FrameLayout implements
         SwipeRefreshLayout.OnRefreshListener, MugenCallbacks {
     public BaseResourceView(Context context) {
         this(context, null);
@@ -58,9 +62,7 @@ public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model
         initView();
     }
 
-    protected VideoApi videoApi; // 数据获取接口(HTTP API)
-
-    private ModelAdapter adapter; // 数据适配器
+    protected NewsApi newsApi; // 数据获取接口(HTTP API)
 
     @BindView(R.id.recyclerView) protected RecyclerView recyclerView;
     @BindView(R.id.refreshLayout) protected SwipeRefreshLayout refreshLayout;
@@ -69,8 +71,10 @@ public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model
     private int skip = 0;
     private boolean loadAll; // 是否已加载完所有数据(limit VS 服务器返回的数据量)
 
+    private ModelAdapter adapter; // 数据适配器
+
     protected void initView() {
-        videoApi = BombClient.getsInstance().getVideoApi();
+        newsApi = BombClient.getsInstance().getNewsApi();
         LayoutInflater.from(getContext()).inflate(R.layout.partial_pager_resource, this, true);
         ButterKnife.bind(this);
         // 初始化RecyclerView
@@ -82,6 +86,11 @@ public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model
         refreshLayout.setColorSchemeResources(R.color.colorPrimary);
         // 配置上拉加载
         Mugen.with(recyclerView, this).start();
+    }
+
+    public void autoRefresh() {
+        refreshLayout.setRefreshing(true);
+        onRefresh();
     }
 
     // 下拉时将来触发的方法 (SwipeRefreshLayout)
@@ -162,14 +171,18 @@ public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model
      */
     protected abstract int getLimit();
 
-    /** 每个单项数据的视图*/
+    /**
+     * 每个单项数据的视图
+     */
     protected abstract ItemView createItemView();
 
-    /** RecyclerView的, 数据适配器*/
-    private class ModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+    /**
+     * RecyclerView的, 数据适配器
+     */
+    private class ModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final LinkedList<Model> dataSet = new LinkedList<>();
 
-        public void clear(){
+        public void clear() {
             dataSet.clear();
             notifyDataSetChanged();
         }
@@ -181,7 +194,8 @@ public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model
 
         @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ItemView itemView = createItemView();
-            return new RecyclerView.ViewHolder(itemView) {};
+            return new RecyclerView.ViewHolder(itemView) {
+            };
         }
 
         @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
@@ -192,6 +206,7 @@ public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model
             // 将当前项的数据设置到当前项的视图上
             itemView.bindModel(model);
         }
+
         @Override public int getItemCount() {
             return dataSet.size();
         }

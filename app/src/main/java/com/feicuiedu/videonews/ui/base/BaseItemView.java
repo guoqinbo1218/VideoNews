@@ -15,8 +15,8 @@ public abstract class BaseItemView<Model> extends FrameLayout{
     }
 
     /** 初始化当前视图*/
-    public abstract void initView();
+    protected abstract void initView();
 
     /** 将实体数据设计到当前视图上*/
-    public abstract void bindModel(Model model);
+    protected abstract void bindModel(Model model);
 }
