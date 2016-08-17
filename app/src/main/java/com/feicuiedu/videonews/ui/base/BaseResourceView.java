@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
@@ -18,6 +19,8 @@ import com.feicuiedu.videonews.commons.ToastUtils;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,12 +38,12 @@ import retrofit2.Response;
  * <p/>
  * 分页加载使用 {@link com.mugen.Mugen} + ProgressBar实现
  * <p/>
- * 本API将包括列表视图（带上下拉）,的核心业务流程
+ * 本API将包括列表视图（带上下拉）,的核心业务流程(获取数据,显示数据-到RecyclerView上)
  * <p/>
  * 作者：yuanchao on 2016/8/17 0017 10:12
  * 邮箱：yuanchao@feicuiedu.com
  */
-public abstract class BaseResourceView<Model> extends FrameLayout implements
+public abstract class BaseResourceView<Model,ItemView extends BaseItemView<Model>> extends FrameLayout implements
         SwipeRefreshLayout.OnRefreshListener, MugenCallbacks {
     public BaseResourceView(Context context) {
         this(context, null);
@@ -55,9 +58,9 @@ public abstract class BaseResourceView<Model> extends FrameLayout implements
         initView();
     }
 
-    private VideoApi videoApi; // 数据获取接口(HTTP API)
+    protected VideoApi videoApi; // 数据获取接口(HTTP API)
 
-    private BaseResourceAdapter<Model> adapter; // 数据适配器
+    private ModelAdapter adapter; // 数据适配器
 
     @BindView(R.id.recyclerView) protected RecyclerView recyclerView;
     @BindView(R.id.refreshLayout) protected SwipeRefreshLayout refreshLayout;
@@ -72,7 +75,7 @@ public abstract class BaseResourceView<Model> extends FrameLayout implements
         ButterKnife.bind(this);
         // 初始化RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new BaseResourceAdapter<Model>();
+        adapter = new ModelAdapter();
         recyclerView.setAdapter(adapter);
         // 配置下拉刷新
         refreshLayout.setOnRefreshListener(this);
@@ -158,4 +161,39 @@ public abstract class BaseResourceView<Model> extends FrameLayout implements
      * 每页将从服务器获取多少条数据
      */
     protected abstract int getLimit();
+
+    /** 每个单项数据的视图*/
+    protected abstract ItemView createItemView();
+
+    /** RecyclerView的, 数据适配器*/
+    private class ModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+        private final LinkedList<Model> dataSet = new LinkedList<>();
+
+        public void clear(){
+            dataSet.clear();
+            notifyDataSetChanged();
+        }
+
+        public void addData(Collection<Model> data) {
+            dataSet.addAll(data);
+            notifyDataSetChanged();
+        }
+
+        @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            ItemView itemView = createItemView();
+            return new RecyclerView.ViewHolder(itemView) {};
+        }
+
+        @Override public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            // 当前项的数据
+            Model model = dataSet.get(position);
+            // 当前项的视图
+            ItemView itemView = (ItemView) holder.itemView;
+            // 将当前项的数据设置到当前项的视图上
+            itemView.bindModel(model);
+        }
+        @Override public int getItemCount() {
+            return dataSet.size();
+        }
+    }
 }
