@@ -1,8 +1,6 @@
 package com.feicuiedu.videonews.bombapi.result;
 
 
-import com.feicuiedu.videonews.bombapi.entity.VideoEntity;
-
 import java.util.List;
 
 /**
@@ -11,11 +9,11 @@ import java.util.List;
  * 作者：yuanchao on 2016/8/16 0016 11:48
  * 邮箱：yuanchao@feicuiedu.com
  */
-public class VideoResult {
+public class QueryResult<T> {
 
-    private List<VideoEntity> results;
+    private List<T> results;
 
-    public List<VideoEntity> getResults() {
+    public List<T> getResults() {
         return results;
     }
 

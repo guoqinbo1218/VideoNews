@@ -3,7 +3,7 @@ package com.feicuiedu.videonews.ui.news;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.feicuiedu.videonews.bombapi.entity.VideoEntity;
+import com.feicuiedu.videonews.bombapi.entity.NewsEntity;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -14,14 +14,14 @@ import java.util.LinkedList;
  */
 public class NewsListAdapter extends RecyclerView.Adapter<NewsListAdapter.MyViewHolder> {
 
-    private final LinkedList<VideoEntity> dataSet = new LinkedList<>();
+    private final LinkedList<NewsEntity> dataSet = new LinkedList<>();
 
     public final void clear(){
         dataSet.clear();
         notifyDataSetChanged();
     }
 
-    public final void addData(Collection<VideoEntity> data){
+    public final void addData(Collection<NewsEntity> data){
         dataSet.addAll(data);
         notifyDataSetChanged();
     }

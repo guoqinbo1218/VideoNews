@@ -1,4 +1,4 @@
-package com.feicuiedu.videonews.ui.news;
+package com.feicuiedu.videonews.ui.base;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -13,8 +13,7 @@ import android.widget.ProgressBar;
 import com.feicuiedu.videonews.R;
 import com.feicuiedu.videonews.bombapi.BombClient;
 import com.feicuiedu.videonews.bombapi.VideoApi;
-import com.feicuiedu.videonews.bombapi.entity.NewsEntity;
-import com.feicuiedu.videonews.bombapi.result.NewsResult;
+import com.feicuiedu.videonews.bombapi.result.QueryResult;
 import com.feicuiedu.videonews.commons.ToastUtils;
 import com.mugen.Mugen;
 import com.mugen.MugenCallbacks;
@@ -28,74 +27,81 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * 带下拉刷新及上拉加载更多,及数据获取的视图
- *
- * 作者：yuanchao on 2016/8/16 0016 16:44
+ * 带下拉刷新及分页加载功能的自定义视图
+ * <p/>
+ * 列表视图使用 {@link android.support.v7.widget.RecyclerView}实现
+ * <p/>
+ * 下拉刷新使用 {@link android.support.v4.widget.SwipeRefreshLayout}实现
+ * <p/>
+ * 分页加载使用 {@link com.mugen.Mugen} + ProgressBar实现
+ * <p/>
+ * 本API将包括列表视图（带上下拉）,的核心业务流程
+ * <p/>
+ * 作者：yuanchao on 2016/8/17 0017 10:12
  * 邮箱：yuanchao@feicuiedu.com
  */
-public class NewsListView extends FrameLayout implements
-        SwipeRefreshLayout.OnRefreshListener, MugenCallbacks{
-    public NewsListView(Context context) {
+public abstract class BaseResourceView<Model> extends FrameLayout implements
+        SwipeRefreshLayout.OnRefreshListener, MugenCallbacks {
+    public BaseResourceView(Context context) {
         this(context, null);
     }
 
-    public NewsListView(Context context, AttributeSet attrs) {
+    public BaseResourceView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public NewsListView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public BaseResourceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView();
     }
+
+    private VideoApi videoApi; // 数据获取接口(HTTP API)
+
+    private BaseResourceAdapter<Model> adapter; // 数据适配器
 
     @BindView(R.id.recyclerView) protected RecyclerView recyclerView;
     @BindView(R.id.refreshLayout) protected SwipeRefreshLayout refreshLayout;
     @BindView(R.id.progressBar) protected ProgressBar progressBar;
 
-    private VideoApi videoApi;
-
-    private NewsListAdapter adapter;
-
+    private int skip = 0;
     private boolean loadAll; // 是否已加载完所有数据(limit VS 服务器返回的数据量)
 
-    private void initView() {
+    protected void initView() {
         videoApi = BombClient.getsInstance().getVideoApi();
         LayoutInflater.from(getContext()).inflate(R.layout.partial_pager_resource, this, true);
         ButterKnife.bind(this);
         // 初始化RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new NewsListAdapter();
+        adapter = new BaseResourceAdapter<Model>();
         recyclerView.setAdapter(adapter);
         // 配置下拉刷新
         refreshLayout.setOnRefreshListener(this);
         refreshLayout.setColorSchemeResources(R.color.colorPrimary);
         // 配置上拉加载
-        Mugen.with(recyclerView,this).start();
+        Mugen.with(recyclerView, this).start();
     }
 
-    private final int limit = 5;
-    private int skip = 0;
     // 下拉时将来触发的方法 (SwipeRefreshLayout)
     @Override public void onRefresh() {
-        // 下拉刷新（获取最新数据）
-        Call<NewsResult> call = videoApi.getVideoNewsList(limit, 0);
+        // 获取数据(抽象)
+        Call<QueryResult<Model>> call = queryData(getLimit(), 0);
         // 返回null，一般说明查询条件未满足
         if (call == null) {
             refreshLayout.setRefreshing(false);// 停止下拉视图
             return;
         }
-        call.enqueue(new Callback<NewsResult>() {
-            @Override public void onResponse(Call<NewsResult> call, Response<NewsResult> response) {
+        call.enqueue(new Callback<QueryResult<Model>>() {
+            @Override public void onResponse(Call<QueryResult<Model>> call, Response<QueryResult<Model>> response) {
                 refreshLayout.setRefreshing(false);// 停止下拉视图
-                // 取出响应数据(视频新闻列表)
-                List<NewsEntity> datas =  response.body().getResults();
+                List<Model> datas = response.body().getResults();
                 skip = datas.size();
-                loadAll = datas.size() < limit;
-                // 将数据添加到Adapter进行视图刷新显示
+                loadAll = datas.size() < getLimit();
+                // 将"数据"添加到Adapter
                 adapter.clear();
                 adapter.addData(datas);
             }
-            @Override public void onFailure(Call<NewsResult> call, Throwable t) {
+
+            @Override public void onFailure(Call<QueryResult<Model>> call, Throwable t) {
                 refreshLayout.setRefreshing(false);// 停止下拉视图
                 ToastUtils.showShort("Failure:" + t.getMessage());
             }
@@ -105,25 +111,26 @@ public class NewsListView extends FrameLayout implements
     // 上拉时将来触发的方法 (Mugen + RecyclerView)
     @Override public void onLoadMore() {
         // 下拉刷新（获取最新数据）
-        Call<NewsResult> call = videoApi.getVideoNewsList(limit, skip);
+        Call<QueryResult<Model>> call = queryData(getLimit(), skip);
         // 返回null，一般说明查询条件未满足
         if (call == null) {
             ToastUtils.showShort("查询条件异常");
             return;
         }
         progressBar.setVisibility(View.VISIBLE); // 显示上拉视图
-        call.enqueue(new Callback<NewsResult>() {
-            @Override public void onResponse(Call<NewsResult> call, Response<NewsResult> response) {
+        call.enqueue(new Callback<QueryResult<Model>>() {
+            @Override public void onResponse(Call<QueryResult<Model>> call, Response<QueryResult<Model>> response) {
                 progressBar.setVisibility(View.GONE); // 隐藏上拉视图
                 // 取出响应数据(视频新闻列表)
-                List<NewsEntity> datas =  response.body().getResults();
+                List<Model> datas = response.body().getResults();
                 // 获取到的数据量不足limit，说明服务器没有更多数据了
-                loadAll = datas.size() < limit;
+                loadAll = datas.size() < getLimit();
                 skip += datas.size();
                 // 将数据添加到Adapter进行视图刷新显示
                 adapter.addData(datas);
             }
-            @Override public void onFailure(Call<NewsResult> call, Throwable t) {
+
+            @Override public void onFailure(Call<QueryResult<Model>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE); // 隐藏上拉视图
                 ToastUtils.showShort("Failure:" + t.getMessage());
             }
@@ -137,4 +144,18 @@ public class NewsListView extends FrameLayout implements
     @Override public boolean hasLoadedAllItems() {
         return loadAll;
     }
+
+    /**
+     * 从服务器查询数据
+     *
+     * @param limit 要查询多少条
+     * @param skip  要跳过多少条
+     * @return {@link Call}
+     */
+    protected abstract Call<QueryResult<Model>> queryData(int limit, int skip);
+
+    /**
+     * 每页将从服务器获取多少条数据
+     */
+    protected abstract int getLimit();
 }

@@ -1,6 +1,6 @@
 package com.feicuiedu.videonews.bombapi;
 
-import com.feicuiedu.videonews.bombapi.result.VideoResult;
+import com.feicuiedu.videonews.bombapi.result.NewsResult;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -17,6 +17,6 @@ public interface VideoApi {
      * 获取所有视频新闻列表, 接时间新到旧排序
      */
     @GET("1/classes/News?order=-createAt")
-    Call<VideoResult> getVideoNewsList(@Query("limit") int limit, @Query("skip") int skip);
+    Call<NewsResult> getVideoNewsList(@Query("limit") int limit, @Query("skip") int skip);
 
 }

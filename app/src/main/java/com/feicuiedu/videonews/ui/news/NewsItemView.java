@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.feicuiedu.videonews.R;
-import com.feicuiedu.videonews.bombapi.entity.VideoEntity;
+import com.feicuiedu.videonews.bombapi.entity.NewsEntity;
 import com.feicuiedu.videonews.commons.CommonUtils;
 
 import butterknife.BindView;
@@ -49,7 +49,7 @@ public class NewsItemView extends FrameLayout {
         ButterKnife.bind(this);
     }
 
-    public void bindModel(VideoEntity entity) {
+    public void bindModel(NewsEntity entity) {
         // 初始视图状态
         tvNewsTitle.setVisibility(View.VISIBLE);
         ivPreview.setVisibility(View.VISIBLE);
