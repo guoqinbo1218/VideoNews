@@ -14,9 +14,14 @@ public class Pointer {
 //    "objectId": "D5vlAAAJ",
 
     @SerializedName("__type")
-    private String type;
+    private String type = "Pointer";
 
     private String className;
 
     private String objectId;
+
+    public Pointer(String className, String objectId) {
+        this.className = className;
+        this.objectId = objectId;
+    }
 }

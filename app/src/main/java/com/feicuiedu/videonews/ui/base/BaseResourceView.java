@@ -194,6 +194,10 @@ public abstract class BaseResourceView<Model, ItemView extends BaseItemView<Mode
 
         @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ItemView itemView = createItemView();
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(
+                    RecyclerView.LayoutParams.MATCH_PARENT,
+                    RecyclerView.LayoutParams.WRAP_CONTENT
+            ));
             return new RecyclerView.ViewHolder(itemView) {
             };
         }

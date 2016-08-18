@@ -23,7 +23,9 @@ public class BombClient {
         return sInstance;
     }
 
+    private Retrofit retrofit;
     private NewsApi newsApi;
+    private UserApi userApi;
 
     private BombClient() {
 
@@ -39,18 +41,28 @@ public class BombClient {
 
         // 让Gson能将bomb返回的时间戳自动转为date对象
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
-                // bomb服务器baseurl
+                        // bomb服务器baseurl
                 .baseUrl("https://api.bmob.cn/")
-                // Gson转换器
+                        // Gson转换器
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        newsApi = retrofit.create(NewsApi.class);
     }
 
     public NewsApi getNewsApi() {
+        if (newsApi == null) {
+            newsApi = retrofit.create(NewsApi.class);
+        }
         return newsApi;
     }
+
+    public UserApi getUserApi() {
+        if (userApi == null) {
+            userApi = retrofit.create(UserApi.class);
+        }
+        return userApi;
+    }
+
 }

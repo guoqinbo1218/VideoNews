@@ -1,5 +1,7 @@
 package com.feicuiedu.videonews.bombapi.entity;
 
+import com.feicuiedu.videonews.bombapi.BombConst;
+import com.feicuiedu.videonews.bombapi.other.Pointer;
 import com.feicuiedu.videonews.bombapi.other.UserPointer;
 
 /**
@@ -12,6 +14,20 @@ public class CommentsEntity extends BaseEntity{
     private String content;
     // 评论作者
     private UserPointer author;
+    // 评论是针对哪条新闻
+    private Pointer news;
+
+    /**
+     *
+     * @param content 评论的内容
+     * @param userId 你是谁
+     * @param newsId 评论针对的新闻
+     */
+    public CommentsEntity(String content,String userId,String newsId) {
+        this.content = content;
+        this.author = new UserPointer(userId);
+        this.news = new Pointer(BombConst.TABLE_NEWS, newsId);
+    }
 
     public String getContent() {
         return content;
@@ -21,7 +37,11 @@ public class CommentsEntity extends BaseEntity{
         return author;
     }
 
-//    {
+    public Pointer getNews() {
+        return news;
+    }
+
+    //    {
 //        "content": "我是愤青！谁敢惹我！",
 //        "author": {
 //                "__type": "Object",

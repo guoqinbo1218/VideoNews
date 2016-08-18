@@ -12,8 +12,8 @@ public class InQuery {
 
     public InQuery(String field, String className, String objectId) {
         this.field = field;
-        this.objectId = objectId;
         this.className = className;
+        this.objectId = objectId;
     }
 
     // 查询当前表的news字段

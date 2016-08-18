@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.feicuiedu.videonews.ui.likes.LikesFragment;
 import com.feicuiedu.videonews.ui.local.LocalVideoFragment;
 import com.feicuiedu.videonews.ui.news.NewsFragment;
 
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 case 1:
                     return new LocalVideoFragment();
                 case 2:
-                    return new LocalVideoFragment();
+                    return new LikesFragment();
                 default:
                     throw new RuntimeException("不存在的数据");
             }

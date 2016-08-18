@@ -53,12 +53,16 @@ public class CommentsActivity extends AppCompatActivity {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.tvTitle) TextView tvTitle; //
     @BindView(R.id.simpleVideoPlayer) SimpleVideoView simpleVideoView;
+    @BindView(R.id.commentsListView) CommentsListView commentsListView;
 
     @Override public void onContentChanged() {
         super.onContentChanged();
         ButterKnife.bind(this);
         //
         tvTitle.setText(newsEntity.getNewsTitle());
+        // 告诉评论列表视图，针对哪一条新闻去获取评论数据
+        commentsListView.setNewsId(newsEntity.getObjectId());
+        commentsListView.autoRefresh();
         // 设置播放源
         String videoPath = CommonUtils.encodeUrl(newsEntity.getVideoUrl());
         simpleVideoView.setVideoPath(videoPath);
