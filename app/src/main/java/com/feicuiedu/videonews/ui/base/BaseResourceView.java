@@ -31,19 +31,19 @@ import retrofit2.Response;
 
 /**
  * 带下拉刷新及分页加载功能的自定义视图
- * <p/>
+ * <p>
  * 本API已完成列表视图上下拉获取数据 及 使用适配器适配显示数据的核心业务流程
- * <p/>
+ * <p>
  * 子类只需重写 queryData(),getLimit()和createItemView(),分别去获取不同数据及创建不同列表项视图即可
- * <p/>
+ * <p>
  * 列表视图使用 {@link RecyclerView}实现
- * <p/>
+ * <p>
  * 下拉刷新使用 {@link SwipeRefreshLayout}实现
- * <p/>
+ * <p>
  * 分页加载使用 {@link Mugen} + {@link ProgressBar} 实现
- * <p/>
+ * <p>
  * 数据获取使用 {@link NewsApi}实现
- * <p/>
+ * <p>
  * 作者：yuanchao on 2016/8/17 0017 10:12
  * 邮箱：yuanchao@feicuiedu.com
  */
