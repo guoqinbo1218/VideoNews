@@ -1,6 +1,8 @@
 package com.feicuiedu.videonews.bombapi;
 
+import com.feicuiedu.videonews.bombapi.entity.CommentsEntity;
 import com.feicuiedu.videonews.bombapi.entity.NewsEntity;
+import com.feicuiedu.videonews.bombapi.other.InQuery;
 import com.feicuiedu.videonews.bombapi.result.QueryResult;
 
 import retrofit2.Call;
@@ -13,11 +15,15 @@ import retrofit2.http.Query;
  * 邮箱：yuanchao@feicuiedu.com
  */
 public interface NewsApi {
-
     /**
      * 获取所有视频新闻列表, 接时间新到旧排序
      */
     @GET("1/classes/News?order=-createAt")
     Call<QueryResult<NewsEntity>> getVideoNewsList(@Query("limit") int limit, @Query("skip") int skip);
 
+    @GET("1/classes/Comments?include=author&order=-createAt")
+    Call<QueryResult<CommentsEntity>> getComments(
+            @Query("limit") int limit,
+            @Query("skip") int skip,
+            @Query("where") InQuery where);
 }

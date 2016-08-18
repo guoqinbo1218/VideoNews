@@ -1,0 +1,149 @@
+{
+    "results": [
+
+        {
+            "content": "我是愤青！谁敢惹我！",
+            "createdAt": "2016-07-11 12:22:03",
+            "objectId": "ioqs000W",
+            "updatedAt": "2016-07-11 12:23:10"
+            "author": {
+                "__type": "Object",
+                "className": "_User",
+                "objectId": "D5vlAAAJ",
+
+                "createdAt": "2016-07-11 12:20:07",
+                "updatedAt": "2016-07-11 12:20:09",
+                "username": "飞翔的猪头"
+            },
+            "news": {
+                "__type": "Object",
+                "className": "News",
+                "objectId": "q3pE999a",
+                "createdAt": "2016-06-30 15:25:01",
+                "likes": {
+                    "__type": "Relation",
+                    "className": "_User"
+                },
+                "newsTitle": "外交部：挑拨中国东盟关系不得人心",
+                "previewUrl": "http://7xsct4.com1.z0.glb.clouddn.com/16-7-11/31326512.jpg",
+                "updatedAt": "2016-07-26 16:50:35",
+                "videoUrl": "http://o9ve1mre2.bkt.clouddn.com/hls_中国东盟关系.m3u8"
+
+            },
+        },
+
+
+        {
+            "author": {
+                "__type": "Object",
+                "className": "_User",
+                "createdAt": "2016-07-11 12:20:07",
+                "objectId": "F1PrGGGK",
+                "updatedAt": "2016-07-11 12:20:09",
+                "username": "飞翔的猪头"
+            },
+            "content": "东盟是中国的友好国家！对了东盟在哪啊？",
+            "createdAt": "2016-07-11 12:24:37",
+            "news": {
+                "__type": "Object",
+                "className": "News",
+                "createdAt": "2016-06-30 15:25:01",
+                "likes": {
+                    "__type": "Relation",
+                    "className": "_User"
+                },
+                "newsTitle": "外交部：挑拨中国东盟关系不得人心",
+                "objectId": "q3pE999a",
+                "previewUrl": "http://7xsct4.com1.z0.glb.clouddn.com/16-7-11/31326512.jpg",
+                "updatedAt": "2016-07-26 16:50:35",
+                "videoUrl": "http://o9ve1mre2.bkt.clouddn.com/hls_中国东盟关系.m3u8"
+            },
+            "objectId": "p6ieKKKP",
+            "updatedAt": "2016-07-11 12:25:00"
+        },
+        {
+            "author": {
+                "__type": "Object",
+                "className": "_User",
+                "createdAt": "2016-07-11 12:19:13",
+                "objectId": "UQ6rOOOQ",
+                "updatedAt": "2016-07-11 12:19:15",
+                "username": "缘之初"
+            },
+            "content": "外交部发言人说的很有道理，但没什么用",
+            "createdAt": "2016-07-11 12:25:55",
+            "news": {
+                "__type": "Object",
+                "className": "News",
+                "createdAt": "2016-06-30 15:25:01",
+                "likes": {
+                    "__type": "Relation",
+                    "className": "_User"
+                },
+                "newsTitle": "外交部：挑拨中国东盟关系不得人心",
+                "objectId": "q3pE999a",
+                "previewUrl": "http://7xsct4.com1.z0.glb.clouddn.com/16-7-11/31326512.jpg",
+                "updatedAt": "2016-07-26 16:50:35",
+                "videoUrl": "http://o9ve1mre2.bkt.clouddn.com/hls_中国东盟关系.m3u8"
+            },
+            "objectId": "58BZFFFI",
+            "updatedAt": "2016-07-11 12:26:36"
+        },
+        {
+            "author": {
+                "__type": "Object",
+                "className": "_User",
+                "createdAt": "2016-07-11 12:18:52",
+                "objectId": "QY5C0003",
+                "updatedAt": "2016-07-11 12:19:25",
+                "username": "李鸿章"
+            },
+            "content": "甲午战败不是我的责任",
+            "createdAt": "2016-07-11 12:26:47",
+            "news": {
+                "__type": "Object",
+                "className": "News",
+                "createdAt": "2016-06-30 15:25:01",
+                "likes": {
+                    "__type": "Relation",
+                    "className": "_User"
+                },
+                "newsTitle": "外交部：挑拨中国东盟关系不得人心",
+                "objectId": "q3pE999a",
+                "previewUrl": "http://7xsct4.com1.z0.glb.clouddn.com/16-7-11/31326512.jpg",
+                "updatedAt": "2016-07-26 16:50:35",
+                "videoUrl": "http://o9ve1mre2.bkt.clouddn.com/hls_中国东盟关系.m3u8"
+            },
+            "objectId": "6mdOkkkq",
+            "updatedAt": "2016-07-11 12:28:24"
+        },
+        {
+            "author": {
+                "__type": "Object",
+                "className": "_User",
+                "createdAt": "2016-07-11 12:18:52",
+                "objectId": "QY5C0003",
+                "updatedAt": "2016-07-11 12:19:25",
+                "username": "李鸿章"
+            },
+            "content": "要不是老佛爷和翁同龢，甲午就赢了",
+            "createdAt": "2016-07-11 12:26:50",
+            "news": {
+                "__type": "Object",
+                "className": "News",
+                "createdAt": "2016-06-30 15:25:01",
+                "likes": {
+                    "__type": "Relation",
+                    "className": "_User"
+                },
+                "newsTitle": "外交部：挑拨中国东盟关系不得人心",
+                "objectId": "q3pE999a",
+                "previewUrl": "http://7xsct4.com1.z0.glb.clouddn.com/16-7-11/31326512.jpg",
+                "updatedAt": "2016-07-26 16:50:35",
+                "videoUrl": "http://o9ve1mre2.bkt.clouddn.com/hls_中国东盟关系.m3u8"
+            },
+            "objectId": "AiKI333H",
+            "updatedAt": "2016-07-11 12:28:50"
+        }
+    ]
+}

@@ -4,7 +4,7 @@ package com.feicuiedu.videonews.bombapi.entity;
  * 作者：yuanchao on 2016/8/16 0016 11:48
  * 邮箱：yuanchao@feicuiedu.com
  */
-public class NewsEntity extends BaseEntity{
+public class NewsEntity extends BaseEntity {
 
     private String newsTitle; // 新闻标题
 
