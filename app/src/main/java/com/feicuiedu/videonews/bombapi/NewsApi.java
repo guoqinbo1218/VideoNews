@@ -25,11 +25,11 @@ public interface NewsApi {
     /**
      * 获取所有视频新闻列表, 接时间新到旧排序
      */
-    @GET("1/classes/News?order=-createAt")
+    @GET("1/classes/News?order=-createdAt")
     Call<QueryResult<NewsEntity>> getVideoNewsList(@Query("limit") int limit, @Query("skip") int skip);
 
     /** 获取评论*/
-    @GET("1/classes/Comments?include=author&order=-createAt")
+    @GET("1/classes/Comments?include=author&order=-createdAt")
     Call<QueryResult<CommentsEntity>> getComments(
             @Query("limit") int limit,
             @Query("skip") int skip,
