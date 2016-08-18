@@ -12,7 +12,7 @@ public class UserPointer extends Pointer {
 //    "createdAt": "2016-07-11 12:20:07",
 //    "updatedAt": "2016-07-11 12:20:09",
 //    "username": "飞翔的猪头"
-    
+
     public String getUsername() {
         return username;
     }

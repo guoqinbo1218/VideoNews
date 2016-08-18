@@ -21,18 +21,20 @@ public class CommentsEntity extends BaseEntity{
         return author;
     }
 
-    //    {
+//    {
 //        "content": "我是愤青！谁敢惹我！",
 //        "author": {
 //                "__type": "Object",
 //                "className": "_User",
 //                "objectId": "D5vlAAAJ",
-//
 //                "createdAt": "2016-07-11 12:20:07",
 //                "updatedAt": "2016-07-11 12:20:09",
 //                "username": "飞翔的猪头"
 //        },
-//
+//        "news": {
+//                "__type": "Pointer",
+//                "className": "News",
+//                "objectId": "sfd3Dd3s",
 //    },
 
 }

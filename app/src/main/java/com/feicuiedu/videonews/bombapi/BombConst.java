@@ -15,7 +15,6 @@ public interface BombConst {
 
     // 服务器的评论表表名
     String TABLE_COMMENTS = "Comments";
-
     // 服务器的评论表新闻字段(评论所对应的新闻)
     String FIELD_NEWS = "news";
 
@@ -27,5 +26,7 @@ public interface BombConst {
 
     // 服务器的收藏表表名
     String TABLE_LIKES = "likes";
+
+
 
 }
