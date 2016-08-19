@@ -63,6 +63,6 @@ public class NewsFragment extends Fragment {
     @Override public void onDestroy() {
         super.onDestroy();
         // 当Fragment,onDestroy，清除所有监听
-        MediaPlayerManager.getsInstance(getContext()).removeAllListener();
+        MediaPlayerManager.getsInstance(getContext()).removeAllListeners();
     }
 }
