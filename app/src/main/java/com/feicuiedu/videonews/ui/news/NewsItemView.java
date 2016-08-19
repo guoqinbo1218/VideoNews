@@ -16,6 +16,7 @@ import com.feicuiedu.videonews.commons.CommonUtils;
 import com.feicuiedu.videonews.ui.base.BaseItemView;
 import com.feicuiedu.videonews.ui.comments.CommentsActivity;
 import com.feicuiedu.videoplayer.list.MediaPlayerManager;
+import com.feicuiedu.videoplayer.list.ScalableTextureView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -30,7 +31,7 @@ import butterknife.OnClick;
  */
 public class NewsItemView extends BaseItemView<NewsEntity>
         implements TextureView.SurfaceTextureListener, MediaPlayerManager.OnPlaybackListener {
-    @BindView(R.id.textureView) TextureView textureView;
+    @BindView(R.id.textureView) ScalableTextureView textureView; // 用来展现视频的TextureView
     @BindView(R.id.ivPreview) ImageView ivPreview;
     @BindView(R.id.tvNewsTitle) TextView tvNewsTitle;
     @BindView(R.id.tvCreatedAt) TextView tvCreatedAt;
@@ -53,6 +54,7 @@ public class NewsItemView extends BaseItemView<NewsEntity>
         mediaPlayerManager.addPlaybackListener(this);
         // TextureView初始化
         textureView.setSurfaceTextureListener(this);
+        textureView.setScaleType(ScalableTextureView.ScaleType.CENTER_CROP);
     }
 
     @Override protected void bindModel(NewsEntity newsEntity) {
@@ -133,6 +135,9 @@ public class NewsItemView extends BaseItemView<NewsEntity>
     @Override public void onSizeMeasured(String videoId, int width, int height) {
         if (isCurrentVideo(videoId)) {
             // 获取到视频尺寸，调整TextureView大小
+            textureView.setContentWidth(width);
+            textureView.setContentHeight(height);
+            textureView.updateTextureViewSize();
         }
     }
 
