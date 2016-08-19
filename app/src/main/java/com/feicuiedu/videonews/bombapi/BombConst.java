@@ -20,6 +20,8 @@ public interface BombConst {
 
     // 服务器的新闻表表名
     String TABLE_NEWS = "News";
+    // 服务器的新闻表收藏字段(此新闻被谁收藏)
+    String FIELD_LIKES = "likes";
 
     // 服务器的用户表表名
     String TABLE_USER = "_User";

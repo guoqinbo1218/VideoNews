@@ -18,7 +18,8 @@ import butterknife.OnClick;
 
 /**
  * 我的收藏页面
- *
+ * 上: 个人信息,登录注册
+ * 下: 收藏列表
  * 作者：yuanchao on 2016/8/18 0018 17:27
  * 邮箱：yuanchao@feicuiedu.com
  */
@@ -33,6 +34,7 @@ public class LikesFragment extends Fragment implements
     @BindView(R.id.btnLogout) Button btnLogout;
     @BindView(R.id.tvUsername) TextView tvUsername;
     @BindView(R.id.divider) View divider;
+    @BindView(R.id.likesListView) LikesListView likesListView;
 
     private RegisterFragment registerFragment; // 注册
     private LoginFragment loginFragment; // 登录
@@ -41,6 +43,15 @@ public class LikesFragment extends Fragment implements
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_likes, container, false);
             ButterKnife.bind(this, view);
+            // 进入我的收藏页面
+            final UserManager userManager = UserManager.getInstance();
+            if(!userManager.isOffline()){
+                view.post(new Runnable() {
+                    @Override public void run() {
+                        userOnLine(userManager.getUsername(), userManager.getObjectId());
+                    }
+                });
+            }
         }
         return view;
     }
@@ -98,8 +109,8 @@ public class LikesFragment extends Fragment implements
         btnRegister.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
         tvUsername.setText(R.string.tourist);
-        // 清空收藏列表
-        //
+        // 清空收藏列表(adapter上的内容clear了)
+        likesListView.clear();
     }
 
     private void userOnLine(String username, String objectId) {
@@ -113,6 +124,6 @@ public class LikesFragment extends Fragment implements
         divider.setVisibility(View.INVISIBLE);
         tvUsername.setText(username);
         // 刷新收藏列表
-        //
+        likesListView.autoRefresh();
     }
 }

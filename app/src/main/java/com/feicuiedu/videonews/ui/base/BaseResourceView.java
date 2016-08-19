@@ -71,7 +71,7 @@ public abstract class BaseResourceView<Model, ItemView extends BaseItemView<Mode
     private int skip = 0;
     private boolean loadAll; // 是否已加载完所有数据(limit VS 服务器返回的数据量)
 
-    private ModelAdapter adapter; // 数据适配器
+    protected ModelAdapter adapter; // 数据适配器
 
     protected void initView() {
         newsApi = BombClient.getsInstance().getNewsApi();
@@ -179,7 +179,7 @@ public abstract class BaseResourceView<Model, ItemView extends BaseItemView<Mode
     /**
      * RecyclerView的, 数据适配器
      */
-    private class ModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    protected class ModelAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         private final LinkedList<Model> dataSet = new LinkedList<>();
 
         public void clear() {
