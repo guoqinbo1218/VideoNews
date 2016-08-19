@@ -22,9 +22,8 @@ import retrofit2.http.Query;
  * 邮箱：yuanchao@feicuiedu.com
  */
 public interface NewsApi {
-    /**
-     * 获取所有视频新闻列表, 接时间新到旧排序
-     */
+
+    /** 获取所有视频新闻列表, 接时间新到旧排序 */
     @GET("1/classes/News?order=-createdAt")
     Call<QueryResult<NewsEntity>> getVideoNewsList(@Query("limit") int limit, @Query("skip") int skip);
 

@@ -18,7 +18,8 @@ public interface UserApi {
     /**
      * 用户注册
      */
-    @POST("1/users") Call<UserResult> register(@Body UserEntity userEntity);
+    @POST("1/users")
+    Call<UserResult> register(@Body UserEntity userEntity);
 
     /**
      * 用户登录
