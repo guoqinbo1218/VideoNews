@@ -48,10 +48,10 @@ public class NewsItemView extends BaseItemView<NewsEntity>
     @Override protected void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.item_news, this, true);
         ButterKnife.bind(this);
-
+        // MediaPlayerManager初始化
         mediaPlayerManager = MediaPlayerManager.getsInstance(getContext());
         mediaPlayerManager.addPlaybackListener(this);
-        //
+        // TextureView初始化
         textureView.setSurfaceTextureListener(this);
     }
 
@@ -92,16 +92,15 @@ public class NewsItemView extends BaseItemView<NewsEntity>
     }
 
     // --------------------------------------------------------
-    @Override public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        Surface s = new Surface(surface);
-        this.surface = s;
+    @Override public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
+        this.surface = new Surface(surfaceTexture);
     }
 
-    @Override public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+    @Override public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
 
     }
 
-    @Override public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+    @Override public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         this.surface.release();
         this.surface = null;
         // 谁离开，停止谁
@@ -121,21 +120,9 @@ public class NewsItemView extends BaseItemView<NewsEntity>
         return newsEntity.getObjectId().equals(videoId);
     }
 
-    @Override public void onStartBuffering(String videoId) {
-        if (isCurrentVideo(videoId)) {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override public void onStopBuffering(String videoId) {
-        if (isCurrentVideo(videoId)) {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
     @Override public void onStartPlay(String videoId) {
         if (isCurrentVideo(videoId)) {
-            // 显示TextureView，隐藏预览图
+            // 开始播放，显示TextureView
             ivPreview.setVisibility(View.INVISIBLE);
             tvNewsTitle.setVisibility(View.INVISIBLE);
             ivPlay.setVisibility(View.INVISIBLE);
@@ -143,18 +130,33 @@ public class NewsItemView extends BaseItemView<NewsEntity>
         }
     }
 
-    @Override public void onStopPlay(String videoId) {
+    @Override public void onSizeMeasured(String videoId, int width, int height) {
         if (isCurrentVideo(videoId)) {
-            ivPreview.setVisibility(View.VISIBLE);
-            tvNewsTitle.setVisibility(View.VISIBLE);
-            ivPlay.setVisibility(View.VISIBLE);
+            // 获取到视频尺寸，调整TextureView大小
+        }
+    }
+
+    @Override public void onStartBuffering(String videoId) {
+        if (isCurrentVideo(videoId)) {
+            // 开始缓冲，显示进度条
+            progressBar.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override public void onStopBuffering(String videoId) {
+        if (isCurrentVideo(videoId)) {
+            // 结束缓冲，隐藏进度条
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
 
-    @Override public void onSizeMeasured(String videoId, int width, int height) {
+    @Override public void onStopPlay(String videoId) {
         if (isCurrentVideo(videoId)) {
-            // 调整大小
+            // 停止播放，显示标题和预览图
+            ivPreview.setVisibility(View.VISIBLE);
+            tvNewsTitle.setVisibility(View.VISIBLE);
+            ivPlay.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
         }
     }
 }
